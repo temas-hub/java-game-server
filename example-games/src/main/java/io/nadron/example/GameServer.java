@@ -8,6 +8,7 @@ import io.nadron.example.zombie.game.ZombieRoom;
 import io.nadron.server.ServerManager;
 import io.nadron.service.TaskManagerService;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -31,10 +32,11 @@ public class GameServer
 		
 		// Start the main game server
 		ServerManager serverManager = ctx.getBean(ServerManager.class);
-		//serverManager.startServers(18090,843,8081);
+
 		try
 		{
-			serverManager.startServers();
+			//serverManager.startServers();
+			serverManager.startServers(18090,843,50122);
 		}
 		catch (Exception e)
 		{
@@ -46,13 +48,14 @@ public class GameServer
 	
 	public static void startGames(AbstractApplicationContext ctx)
 	{
-//		World world = ctx.getBean(World.class);
-//		GameRoom room1 = (GameRoom)ctx.getBean("Zombie_ROOM_1");
+		World world = ctx.getBean(World.class);
+		List<GameRoom> rooms = (List<GameRoom>)ctx.getBean("Zombie_Rooms");
+		//GameRoom room1 = (GameRoom)ctx.getBean("Zombie_ROOM_1");
 //		GameRoom room2 = (GameRoom)ctx.getBean("Zombie_ROOM_2");
-//		Task monitor1 = new WorldMonitor(world,room1);
+		Task monitor1 = new WorldMonitor(world,rooms.get(0));
 //		Task monitor2 = new WorldMonitor(world,room2);
-//		TaskManagerService taskManager = ctx.getBean(TaskManagerService.class);
-//		taskManager.scheduleWithFixedDelay(monitor1, 1000, 5000, TimeUnit.MILLISECONDS);
+		TaskManagerService taskManager = ctx.getBean(TaskManagerService.class);
+		taskManager.scheduleWithFixedDelay(monitor1, 1000, 1000, TimeUnit.MILLISECONDS);
 //		taskManager.scheduleWithFixedDelay(monitor2, 2000, 5000, TimeUnit.MILLISECONDS);
 	}
 	

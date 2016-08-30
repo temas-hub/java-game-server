@@ -42,29 +42,30 @@ public class WorldMonitor implements Task
 	@Override
 	public void run()
 	{
-		if(world.apocalypse())
+		NetworkEvent networkEvent = null;
+		if(room.getProtocol() instanceof WebSocketProtocol)
 		{
-			// Send it to all players
-			System.out.println("Apocalypse is here");
-			NetworkEvent networkEvent = Events.networkEvent(Messages.apocalypse());
-			room.sendBroadcast(networkEvent);
+			if(world.apocalypse()) {
+				// Send it to all players
+				System.out.println("Apocalypse is here");
+				networkEvent = Events.networkEvent(Messages.apocalypse());
+			} else {
+				networkEvent = Events.networkEvent(world.getAlive());
+			}
 		}
 		else
 		{
-			NetworkEvent networkEvent = null;
-			if(room.getProtocol() instanceof WebSocketProtocol)
-			{
-				networkEvent = Events.networkEvent(world.getAlive());
-			}
-			else
-			{
-				NettyMessageBuffer buffer = new NettyMessageBuffer();
+			NettyMessageBuffer buffer = new NettyMessageBuffer();
+			if(world.apocalypse()) {
+				buffer.writeInt(ZombieCommands.APOCALYPSE.getCommand());
+			} else {
 				buffer.writeInt(world.getAlive());
-				networkEvent = Events.networkEvent(buffer,DeliveryGuarantyOptions.FAST);
 			}
-			room.sendBroadcast(networkEvent);
+			networkEvent = Events.networkEvent(buffer, DeliveryGuarantyOptions.FAST);
+
 		}
-		
+		room.sendBroadcast(networkEvent);
+
 		world.report();
 	}
 

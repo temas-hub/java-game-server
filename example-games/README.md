@@ -13,7 +13,8 @@ set serverclasspath = ./nadron-0.5.jar;./....
 java -cp $serverclasspath -Dlog4j.configuration=GameServerLog4j.properties io.nadron.GameServer    
 **To start the zombie client**    
 set clientclasspath = ./nadclient-0.5.jar;./netty-all-4.0.10.Final.jar....    
-java -cp clientclasspath io.nadron.ZombieClient   
+java -cp clientclasspath io.nadron.example.SimpleZombieClient
+
 
 Jar Dependencies
 ----------------

@@ -99,7 +99,7 @@ public class SpringConfig
 	World world()
 	{
 		World world = new World();
-		world.setAlive(2000000000);
+		world.setAlive(1000);
 		world.setUndead(1);
 		return world;
 	}

@@ -211,8 +211,8 @@ public class NettyUDPClient
 		udpBootstrap.group(boss).channel(NioDatagramChannel.class)
 				.option(ChannelOption.SO_BROADCAST, true)
 				.handler(pipelineFactory);
-		DatagramChannel datagramChannel = (DatagramChannel) udpBootstrap
-				.bind(new InetSocketAddress(localhostName, 0)).sync().channel();
+		ChannelFuture channelFuture = udpBootstrap.connect(serverAddress);
+		DatagramChannel datagramChannel = (DatagramChannel)channelFuture.await().channel();
 		return datagramChannel;
 	}
 	
@@ -238,7 +238,7 @@ public class NettyUDPClient
 	 * @throws UnknownHostException
 	 */
 	public ChannelFuture connect(Session session,
-			DatagramChannel datagramChannel, InetSocketAddress serverAddress,
+			final DatagramChannel datagramChannel, InetSocketAddress serverAddress,
 			int timeout, TimeUnit unit) throws UnknownHostException,
 			InterruptedException
 	{
@@ -255,7 +255,8 @@ public class NettyUDPClient
 		}
 
 		Event event = Events.event(null, Events.CONNECT);
-		
+
+
 		ChannelFuture future = datagramChannel.write(event);
 		future.addListener(new ChannelFutureListener()
 		{
