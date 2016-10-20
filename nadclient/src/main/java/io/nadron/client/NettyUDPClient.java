@@ -257,7 +257,7 @@ public class NettyUDPClient
 		Event event = Events.event(null, Events.CONNECT);
 
 
-		ChannelFuture future = datagramChannel.write(event);
+		ChannelFuture future = datagramChannel.writeAndFlush(event);
 		future.addListener(new ChannelFutureListener()
 		{
 			@Override
