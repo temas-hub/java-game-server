@@ -26,14 +26,14 @@
 		<dependency>
 			<groupId>com.github.menacher</groupId>
 			<artifactId>nadron</artifactId>
-			<version>0.8-SNAPSHOT</version>
+			<version>0.8-TEMAS</version>
 		</dependency>
 		
 		<!-- Nad client dependency -->
 		<dependency>
 			<groupId>com.github.menacher</groupId>
 			<artifactId>nadclient</artifactId>
-			<version>0.8-SNAPSHOT</version>
+			<version>0.8-TEMAS</version>
 		</dependency>
 		
 		<!-- SLF4J to LOG4J dependency -->

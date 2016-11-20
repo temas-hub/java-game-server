@@ -4,6 +4,7 @@ import io.nadron.app.GameRoom;
 import io.nadron.app.Player;
 import io.nadron.app.PlayerSession;
 import io.nadron.app.Session;
+import io.nadron.communication.NettyMessageBuffer;
 import io.nadron.communication.NettyTCPMessageSender;
 import io.nadron.event.Event;
 import io.nadron.event.Events;
@@ -251,7 +252,8 @@ public class LoginHandler extends SimpleChannelInboundHandler<Event>
 					// Connect the pipeline to the game room.
 					gameRoom.connectSession(playerSession);
 					// send the start event to remote client.
-					tcpSender.sendMessage(Events.event(null, Events.START));
+					NettyMessageBuffer playerIdData = createPlayIdPacket(playerSession);
+					tcpSender.sendMessage(Events.event(playerIdData, Events.START));
 					gameRoom.onLogin(playerSession);
 				}
 				else
@@ -262,7 +264,20 @@ public class LoginHandler extends SimpleChannelInboundHandler<Event>
 			}
 		});
 	}
-	
+
+	private NettyMessageBuffer createPlayIdPacket(final PlayerSession playerSession) {
+		Object playerId = playerSession.getPlayer().getId();
+		NettyMessageBuffer playerData = new NettyMessageBuffer();
+		if (playerId instanceof Integer) {
+            playerData.writeInt((Integer) playerId);
+        } else if (playerId instanceof String) {
+        	playerData.writeString((String)playerId);
+		} else {
+			return null; // Other types does not supported
+		}
+		return playerData;
+	}
+
 	/**
 	 * This method adds the player session to the
 	 * {@link SessionRegistryService}. The key being the remote udp address of
