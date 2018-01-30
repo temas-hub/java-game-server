@@ -3,7 +3,7 @@
 	<groupId>com.github.menacher</groupId>
 	<artifactId>nadclient</artifactId>
 	<packaging>jar</packaging>
-	<version>0.8-TEMAS</version>
+	<version>0.9-TEMAS</version>
 	<name>nadclient</name>
 	<url>https://github.com/menacher/java-game-server/tree/netty4/nadclient</url>
 	<description>This is a client library for Nadron server https://github.com/menacher/java-game-server/tree/netty4/nadron. Java clients can use this program to connect and interact with nadron server.</description>
@@ -55,6 +55,18 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>java8-doclint-disabled</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<javadoc.opts>-Xdoclint:none</javadoc.opts>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -97,6 +109,7 @@
 				<configuration>
 					<show>private</show>
 					<nohelp>true</nohelp>
+					<additionalparam>${javadoc.opts}</additionalparam>
 				</configuration>
 			</plugin>
 
